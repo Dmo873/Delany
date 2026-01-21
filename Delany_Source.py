@@ -44,8 +44,8 @@ def loading_bar():
 
 # Global variables
 h = '17'
-n = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'I will take out a captcha to check where you have to find all the traffic lights if you do not stop']
-p = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'i will take out a captcha check where you have to find all the traffic lights if you do not stop', 'THERE CAN ONLY BE ONE DELANY']
+name_dhyan = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'I will take out a captcha to check where you have to find all the traffic lights if you do not stop']
+name_delany = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'i will take out a captcha check where you have to find all the traffic lights if you do not stop', 'THERE CAN ONLY BE ONE DELANY']
 crash = "self_destruct_" * 10000
 patch_notes_url = 'https://docs.google.com/document/d/13yt7S8AiV9CNxNvER5uxVfFyM9-a1JeGvHr-y_6n-A4'
 name = ""
@@ -211,14 +211,14 @@ def start_game():
         print_slow("so your name can not be Delany.")
         while name.lower() == 'delany':
             name = input('what is your name? ').strip()
-            print_slow(random.choice(p))
+            print_slow(random.choice(name_delany))
         time.sleep(1)
         print_slow(f'hello {name}.')
     elif name.lower() == 'dhyan':
         print_slow('I know Dhyan, he is a good guy')
         print_slow("but he ain't you.")
         while name.lower() == 'dhyan':
-            print_slow(random.choice(n))
+            print_slow(random.choice(name_dhyan))
             name = input('what is your name? ').strip()
             
         print_slow(f'hello {name}.')
