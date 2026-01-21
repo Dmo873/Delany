@@ -158,9 +158,240 @@ def mini_game():
         print_slow("Ok, let me just boot it up...") 
         time.sleep(1)
         The_word_game()
+# Battleship game implementation (player vs bot)
 def battleship():
     clear_screen()
-    print("battleship is on the way, please stay tuned for a future update")
+    print_slow("Starting Battleship...")
+    time.sleep(0.6)
+
+    SIZE = 5
+    SHIP_SIZES = [3, 2]  # two ships: one length 3 and one length 2 for each side
+
+    def make_empty_board(size):
+        return [['~' for _ in range(size)] for _ in range(size)]
+
+    def place_ship_random(board, ship_len):
+        size = len(board)
+        attempts = 0
+        while True:
+            attempts += 1
+            orientation = random.choice(['H', 'V'])
+            if orientation == 'H':
+                row = random.randrange(size)
+                col = random.randrange(size - ship_len + 1)
+                coords = [(row, col + i) for i in range(ship_len)]
+            else:
+                row = random.randrange(size - ship_len + 1)
+                col = random.randrange(size)
+                coords = [(row + i, col) for i in range(ship_len)]
+            # check free
+            if all(board[r][c] == '~' for r, c in coords):
+                for r, c in coords:
+                    board[r][c] = 'S'
+                return set(coords)
+            if attempts > 200:
+                # fallback: reset board
+                for r in range(size):
+                    for c in range(size):
+                        board[r][c] = '~'
+                attempts = 0
+
+    def coords_to_str(r, c):
+        return f"{chr(ord('A')+c)}{r+1}"
+
+    def parse_input(inp):
+        inp = inp.strip().upper().replace(' ', '').replace(',', '')
+        if len(inp) >= 2 and inp[0].isalpha():
+            col = ord(inp[0]) - ord('A')
+            try:
+                row = int(inp[1:]) - 1
+            except ValueError:
+                return None
+            if 0 <= row < SIZE and 0 <= col < SIZE:
+                return (row, col)
+        else:
+            parts = inp.split()
+            if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
+                r = int(parts[0]) - 1
+                c = int(parts[1]) - 1
+                if 0 <= r < SIZE and 0 <= c < SIZE:
+                    return (r, c)
+        return None
+
+    def print_side_boards(player_board, bot_board, reveal_bot=False):
+        # print two boards side by side
+        size = SIZE
+        header = '   ' + ' '.join([chr(ord('A') + i) for i in range(size)])
+        left_lines = [header]
+        right_lines = [header]
+        for i in range(size):
+            left_lines.append(str(i+1).rjust(2) + ' ' + ' '.join(player_board[i]))
+            if reveal_bot:
+                right_lines.append(str(i+1).rjust(2) + ' ' + ' '.join(bot_board[i]))
+            else:
+                # hide ships
+                display = []
+                for cell in bot_board[i]:
+                    if cell == 'S':
+                        display.append('~')
+                    else:
+                        display.append(cell)
+                right_lines.append(str(i+1).rjust(2) + ' ' + ' '.join(display))
+        combined = []
+        for l, r in zip(left_lines, right_lines):
+            combined.append(l + '    ' + r)
+        print('\n'.join(combined))
+
+    # initialize boards
+    player_board = make_empty_board(SIZE)
+    bot_board = make_empty_board(SIZE)
+
+    player_ships = []
+    bot_ships = []
+
+    player_ship_cells = set()
+    bot_ship_cells = set()
+
+    # place ships for both
+    for s in SHIP_SIZES:
+        player_ships.append(place_ship_random(player_board, s))
+        player_ship_cells |= player_ships[-1]
+        bot_ships.append(place_ship_random(bot_board, s))
+        bot_ship_cells |= bot_ships[-1]
+
+    # track guesses
+    player_guesses = set()
+    bot_guesses = set()
+
+    delany_comments_hit = [
+        "Ooh—nice shot, that had to hurt.",
+        "You found something... good for you.",
+        "That's one less thing for them to hide.",
+        "Direct hit. Don't get cocky."
+    ]
+    delany_comments_miss = [
+        "Missed... but at least you tried.",
+        "Close... not really.",
+        "Nope. Try again, unless you like losing.",
+        "You swing and you miss. Typical." 
+    ]
+    delany_comments_sink = [
+        "You sank a ship. That's... impressive.",
+        "It broke apart under your gaze.",
+        "One less enemy. Well done."
+    ]
+    delany_comments_bot_hit = [
+        "Hey, they hit you. Not my favorite turn.",
+        "The bot's got one. You okay there?",
+        "Oof. That looked painful."
+    ]
+    delany_comments_bot_miss = [
+        "The bot missed. Lucky you.",
+        "They flailed a little and missed.",
+        "Phew. Close call."
+    ]
+
+    # game loop
+    player_turn = True
+    while True:
+        clear_screen()
+        print_slow("Delany: " + random.choice(["Let's see what you do next.", "I'll watch closely."]))
+        print('\nYour board (left)    Bot board (right)')
+        print_side_boards(player_board, bot_board, reveal_bot=False)
+        time.sleep(0.4)
+
+        # Player's turn
+        valid = False
+        while not valid:
+            guess = input('\nEnter a coordinate to fire (e.g. A1): ').strip()
+            parsed = parse_input(guess)
+            if not parsed:
+                print_slow("That's not a valid coordinate. Try like A1 or 1 A.")
+                continue
+            r, c = parsed
+            if (r, c) in player_guesses:
+                print_slow("You already fired there. Try again.")
+                continue
+            valid = True
+        player_guesses.add((r, c))
+
+        if (r, c) in bot_ship_cells:
+            # hit
+            bot_board[r][c] = 'X'
+            bot_ship_cells.remove((r, c))
+            # check if a ship was sunk (if none of the ship's coords remain)
+            sunk = False
+            for ship in bot_ships:
+                if (r, c) in ship:
+                    ship.remove((r, c))
+                    if len(ship) == 0:
+                        sunk = True
+                    break
+            if sunk:
+                print_slow(random.choice(delany_comments_sink))
+                print_slow(f'You sank one of the bot\'s ships at {coords_to_str(r,c)}!')
+            else:
+                print_slow(random.choice(delany_comments_hit))
+                print_slow(f'You hit something at {coords_to_str(r,c)}.')
+        else:
+            bot_board[r][c] = 'O'
+            print_slow(random.choice(delany_comments_miss))
+            print_slow(f'You missed at {coords_to_str(r,c)}.')
+
+        # check win
+        if not bot_ship_cells:
+            print_slow('\nYou won! All enemy ships have been destroyed.')
+            print_slow('Delany: I didn\'t think you had it in you. Congratulations, I guess.')
+            input('\nPress Enter to continue...')
+            return
+
+        time.sleep(0.8)
+
+        # Bot's turn
+        clear_screen()
+        print_slow("Delany: Now it's their turn. Hold your breath—metaphorically.")
+        time.sleep(0.6)
+        # choose random coordinate not guessed
+        available = [(r,c) for r in range(SIZE) for c in range(SIZE) if (r,c) not in bot_guesses]
+        bot_choice = random.choice(available)
+        bot_guesses.add(bot_choice)
+        br, bc = bot_choice
+        time.sleep(0.8)
+        if (br, bc) in player_ship_cells:
+            player_board[br][bc] = 'X'
+            player_ship_cells.remove((br, bc))
+            # check if a player ship is sunk
+            sunk = False
+            for ship in player_ships:
+                if (br, bc) in ship:
+                    ship.remove((br, bc))
+                    if len(ship) == 0:
+                        sunk = True
+                    break
+            if sunk:
+                print_slow(random.choice(delany_comments_bot_hit))
+                print_slow(f'The bot sank one of your ships at {coords_to_str(br,bc)}.')
+            else:
+                print_slow(random.choice(delany_comments_bot_hit))
+                print_slow(f'The bot hit your ship at {coords_to_str(br,bc)}.')
+        else:
+            player_board[br][bc] = 'O'
+            print_slow(random.choice(delany_comments_bot_miss))
+            print_slow(f'The bot missed at {coords_to_str(br,bc)}.')
+
+        # check lose
+        if not player_ship_cells:
+            print_slow('\nYou lost. All your ships were destroyed.')
+            print_slow('Delany: Well. That was... expected. Better luck next time.')
+            input('\nPress Enter to continue...')
+            return
+
+        time.sleep(1)
+
+def battleship_placeholder():
+    # kept for compatibility in case something references the old name
+    battleship()
+
 def tic_tac_toe():
     clear_screen()
     print("tic tac toe is on the way, please stay tuned for a future update")
