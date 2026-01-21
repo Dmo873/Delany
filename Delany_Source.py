@@ -35,7 +35,7 @@ def loading_bar():
     print_slow('Starting program...')
     print('[', end='')
     for i in range(bar_length):
-        sys.stdout.write('(◓̃ ͜')
+        sys.stdout.write('|')
         sys.stdout.flush()
         time.sleep(0.1) # Controls the speed of the loading bar
     print(']')
@@ -43,15 +43,17 @@ def loading_bar():
     time.sleep(1)
 
 # Global variables
+Version = "5.0.2 alpha"
 h = '17'
-n = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'I will take out a captcha to check where you have to find all the traffic lights if you do not stop']
-p = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'i will take out a captcha check where you have to find all the traffic lights if you do not stop', 'THERE CAN ONLY BE ONE DELANY']
+name_dhyan = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'I will take out a captcha to check where you have to find all the traffic lights if you do not stop']
+name_delany = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'i will take out a captcha check where you have to find all the traffic lights if you do not stop', 'THERE CAN ONLY BE ONE DELANY']
 crash = "self_destruct_" * 10000
 patch_notes_url = 'https://docs.google.com/document/d/13yt7S8AiV9CNxNvER5uxVfFyM9-a1JeGvHr-y_6n-A4'
 name = ""
 age = 0
 feel = ""
 speed_mode = False
+
 
 # Function to display patch notes
 def show_patch_notes():
@@ -107,6 +109,10 @@ def show_patch_notes():
 -Added more dialoge and story
 -Started 'Game' path
 -Moved devlopment to VSCODE
+5.0.2 alpha (released on jan 21 2026)
+-Updated variable names
+-Fixed naming loophole where you could name yourself Dhyan and/or Delany
+-Made Loading bar straight 
 Known Issues:
 -Some minor pacing issues persist
 -Misinputs can ruin the game
@@ -179,7 +185,7 @@ def start_game():
 ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   
     """ + '\033[0m')
 
-    print('\nversion 5.0.1 alpha (patches on the way for bugs)')
+    print('\nversion '+ Version + ' (patches on the way for bugs)')
     # print('NOTICE, VERSION STILL IN DEVELOPMENT PLEASE REPORT BUGS')
     print('If you want to see the patch notes, just say "patch notes"')
     
@@ -211,16 +217,23 @@ def start_game():
         print_slow("so your name can not be Delany.")
         while name.lower() == 'delany':
             name = input('what is your name? ').strip()
-            print_slow(random.choice(p))
+            print_slow(random.choice(name_delany))
         time.sleep(1)
         print_slow(f'hello {name}.')
+        while name.lower() == 'dhyan':
+            print_slow(random.choice(name_dhyan))
+            name = input('what is your name? ').strip()
     elif name.lower() == 'dhyan':
         print_slow('I know Dhyan, he is a good guy')
         print_slow("but he ain't you.")
         while name.lower() == 'dhyan':
-            print_slow(random.choice(n))
+            print_slow(random.choice(name_dhyan))
             name = input('what is your name? ').strip()
-            
+        while name.lower() == 'delany':
+            name = input('what is your name? ').strip()
+            print_slow(random.choice(name_delany))
+        time.sleep(1)
+        print_slow(f'hello {name}.')    
         print_slow(f'hello {name}.')
         time.sleep(1)
     else:
