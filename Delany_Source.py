@@ -164,8 +164,8 @@ def battleship():
     print_slow("Starting Battleship...")
     time.sleep(0.6)
 
-    SIZE = 5
-    SHIP_SIZES = [3, 2]  # two ships: one length 3 and one length 2 for each side
+    SIZE = random.randint(5,9)
+    SHIP_SIZES = [3, 2, 4]  # three ships: one length 3 and one length 2 and one 6 for each side
 
     def make_empty_board(size):
         return [['~' for _ in range(size)] for _ in range(size)]
@@ -264,31 +264,36 @@ def battleship():
     bot_guesses = set()
 
     delany_comments_hit = [
-        "Ooh—nice shot, that had to hurt.",
-        "You found something... good for you.",
-        "That's one less thing for them to hide.",
+        "Ooh—nice shot, that kinda hurt.",
+        "You hit something... great.",
+        "That's one less thing to hide. I guess",
         "Direct hit. Don't get cocky."
     ]
     delany_comments_miss = [
         "Missed... but at least you tried.",
         "Close... not really.",
         "Nope. Try again, unless you like losing.",
-        "You swing and you miss. Typical." 
+        "You swing and you miss. Typical. Fucking Loser",
+        "No wonder she left you...",
+        "Wow, for someone without a life, you suck at this",
+        "Your the one that wanted to play this>", 
+        
     ]
     delany_comments_sink = [
-        "You sank a ship. That's... impressive.",
+        "You sank my ship. That's... impressive.",
         "It broke apart under your gaze.",
-        "One less enemy. Well done."
+        "YOU SUNK MY SHIP GODDAMN IT"
+        "
     ]
     delany_comments_bot_hit = [
-        "Hey, they hit you. Not my favorite turn.",
-        "The bot's got one. You okay there?",
+        "I hit you! Take that you unswiddling pirate",
+        "Thats a hit, BITCH!",
         "Oof. That looked painful."
     ]
     delany_comments_bot_miss = [
-        "The bot missed. Lucky you.",
-        "They flailed a little and missed.",
-        "Phew. Close call."
+        "I missed. Lucky you.",
+        "HOW DID I MISS YOUR SHIP YOUR YOU LITTLE SHIT",
+        "*SIGH*, I missed."
     ]
 
     # game loop
