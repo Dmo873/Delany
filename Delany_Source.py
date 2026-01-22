@@ -45,8 +45,8 @@ def loading_bar():
 # Global variables
 Version = "5.0.2 alpha"
 h = '17'
-name_dhyan = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'I will take out a captcha to check where you have to find all the traffic lights if you do not stop']
-name_delany = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up', "it's rigged", 'i will take out a captcha check where you have to find all the traffic lights if you do not stop', 'THERE CAN ONLY BE ONE DELANY']
+name_dhyan = ['no you\'re not', 'nu-uh', 'I swear if you answer that again', 'YOU ARE NOT MY CREATOR - I mean - DHYAN', 'you are definitely not Dhyan, he is much more handsome than you', 'listen man, [...]']
+name_delany = ['no your not', 'nu-uh', 'I swear if you answer that again', 'I AM DELANY NOT YOU!', 'you are definitely not me, you\'re not dead.', 'listen man, I am gonna keep asking till you give up[...]']
 crash = "self_destruct_" * 10000
 patch_notes_url = 'https://docs.google.com/document/d/13yt7S8AiV9CNxNvER5uxVfFyM9-a1JeGvHr-y_6n-A4'
 name = ""
@@ -158,14 +158,25 @@ def mini_game():
         print_slow("Ok, let me just boot it up...") 
         time.sleep(1)
         The_word_game()
+
+def print_board(board):
+    """Return a string representation of a board for debugging or printing."""
+    size = len(board)
+    rows = []
+    header = '  ' + ' '.join([chr(ord('A') + i) for i in range(size)])
+    rows.append(header)
+    for i, row in enumerate(board):
+        rows.append(str(i+1).rjust(2) + ' ' + ' '.join(row))
+    return '\n'.join(rows)
+
 # Battleship game implementation (player vs bot)
 def battleship():
     clear_screen()
     print_slow("Starting Battleship...")
     time.sleep(0.6)
 
-    SIZE = random.randint(5,9)
-    SHIP_SIZES = [3, 2, 4]  # three ships: one length 3 and one length 2 and one 6 for each side
+    SIZE = 5
+    SHIP_SIZES = [3, 2]  # two ships: one length 3 and one length 2 for each side
 
     def make_empty_board(size):
         return [['~' for _ in range(size)] for _ in range(size)]
@@ -259,59 +270,53 @@ def battleship():
         bot_ships.append(place_ship_random(bot_board, s))
         bot_ship_cells |= bot_ships[-1]
 
+    # replace 'S' on player board with 'S' (visible to player) and bot board 'S' kept hidden
+
     # track guesses
     player_guesses = set()
     bot_guesses = set()
 
     delany_comments_hit = [
-        "Ooh—nice shot, that kinda hurt.",
-        "You hit something... great.",
-        "That's one less thing to hide. I guess",
-        "Direct hit. Don't get cocky.",
-        "Thats a hit, BITCH!"
+        "Ooh—nice shot, that had to hurt.",
+        "You found something... good for you.",
+        "That's one less thing for them to hide.",
+        "Direct hit. Don't get cocky."
     ]
     delany_comments_miss = [
         "Missed... but at least you tried.",
         "Close... not really.",
         "Nope. Try again, unless you like losing.",
-        "You swing and you miss. Typical. Fucking Loser",
-        "No wonder she left you...",
-        "Wow, for someone without a life, you suck at this",
-        "Your the one that wanted to play this>", 
-        
+        "You swing and you miss. Typical." 
     ]
     delany_comments_sink = [
-        "You sank my ship. That's... impressive.",
+        "You sank a ship. That's... impressive.",
         "It broke apart under your gaze.",
-        "YOU SUNK MY SHIP GODDAMN IT"
-        
+        "One less enemy. Well done."
     ]
     delany_comments_bot_hit = [
-        "I hit you! Take that you unswiddling pirate",
+        "Hey, they hit you. Not my favorite turn.",
+        "The bot's got one. You okay there?",
         "Oof. That looked painful."
-        
     ]
     delany_comments_bot_miss = [
-        "I missed. Lucky you.",
-        "HOW DID I MISS YOUR SHIP YOU LITTLE SHIT",
-        "*SIGH*, I missed.",
-        "DAMNIT I MISSED",
-        "It's all part of my plan...  I swear"
+        "The bot missed. Lucky you.",
+        "They flailed a little and missed.",
+        "Phew. Close call."
     ]
 
     # game loop
     player_turn = True
     while True:
         clear_screen()
-        print_slow("Delany: " + random.choice(["Let's see what you do next.", "I'll watch closely.", "You scared yet", "I gotta figure out to play pirate music."]))
-        print('\nYour board (left)    My board (right)')
+        print_slow("Delany: " + random.choice(["Let's see what you do next.", "I'll watch closely."]))
+        print('\nYour board (left)    Bot board (right)')
         print_side_boards(player_board, bot_board, reveal_bot=False)
         time.sleep(0.4)
 
         # Player's turn
         valid = False
         while not valid:
-            guess = input('\nEnter a coordinate to fire (e.g. A1 or a1): ').strip()
+            guess = input('\nEnter a coordinate to fire (e.g. A1): ').strip()
             parsed = parse_input(guess)
             if not parsed:
                 print_slow("That's not a valid coordinate. Try like A1 or 1 A.")
@@ -396,6 +401,7 @@ def battleship():
 
         time.sleep(1)
 
+
 def battleship_placeholder():
     # kept for compatibility in case something references the old name
     battleship()
@@ -430,7 +436,7 @@ def start_game():
     
     start_input = input('only type when a sentence ends in "?" and adhere to all instructions, ok?\n').lower()
     
-    if start_input in ['patch notes', 'can i see the patch notes?', 'can i see the patch notes', 'just show me the patch notes', 'just show me the patch notes?', 'patch notes?', 'patch notes', 'i want to see the patch notes', 'i want to see the patch notes?', 'show patch notes', 'show patch notes?', 'just ask for patch notes', 'just ask for patch notes?',  'show me the patch notes', 'show me the patch notes?', 'pc']:
+    if start_input in ['patch notes', 'can i see the patch notes?', 'can i see the patch notes', 'just show me the patch notes', 'just show me the patch notes?', 'patch notes?', 'patch notes', 'i want[...]']:
         show_patch_notes()
     
     if start_input not in ['yes', 'ok', 'yes', 'ok', 'ok']:
@@ -547,7 +553,7 @@ def coffee_shop():
             time.sleep(1)
             
             # New branch for user choice
-            forgiveness_choice = input("1. They know you tried your best.\n2. You can't expect forgiveness if you don't ask.\n3. It's okay, you're not to blame.\n").strip()
+            forgiveness_choice = input("1. They know you tried your best.\n2. You can\'t expect forgiveness if you don\'t ask.\n3. It\'s okay, you\'re not to blame.\n").strip()
             
             if forgiveness_choice == '1':
                 clear_screen()
@@ -611,6 +617,7 @@ def path_one():
     else:
         print_slow("That's not a valid option. The program will now terminate.")
         return
+
 
 def path_yes():
     clear_screen()
@@ -795,6 +802,7 @@ def end_game():
     clear_screen()
     print_slow('*program has been terminated*')
     time.sleep(2)
+    clear_screen()
     print_slow('Thank you for playing.')
     time.sleep(2)
     print_slow("""Credits:
