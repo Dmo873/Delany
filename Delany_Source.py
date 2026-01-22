@@ -300,8 +300,8 @@ def battleship():
     player_turn = True
     while True:
         clear_screen()
-        print_slow("Delany: " + random.choice(["Let's see what you do next.", "I'll watch closely."]))
-        print('\nYour board (left)    Bot board (right)')
+        print_slow("Delany: " + random.choice(["Let's see what you do next.", "I'll watch closely.", "You scared yet", "I gotta figure out to play pirate music."]))
+        print('\nYour board (left)    My board (right)')
         print_side_boards(player_board, bot_board, reveal_bot=False)
         time.sleep(0.4)
 
