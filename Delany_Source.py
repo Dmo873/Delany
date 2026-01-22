@@ -283,7 +283,7 @@ def battleship():
         "You sank my ship. That's... impressive.",
         "It broke apart under your gaze.",
         "YOU SUNK MY SHIP GODDAMN IT"
-        "
+        
     ]
     delany_comments_bot_hit = [
         "I hit you! Take that you unswiddling pirate",
