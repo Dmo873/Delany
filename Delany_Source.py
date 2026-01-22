@@ -113,6 +113,7 @@ def show_patch_notes():
 -Updated variable names
 -Fixed naming loophole where you could name yourself Dhyan and/or Delany
 -Made Loading bar straight 
+-Added Battleship
 Known Issues:
 -Some minor pacing issues persist
 -Misinputs can ruin the game
