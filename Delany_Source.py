@@ -267,7 +267,8 @@ def battleship():
         "Ooh—nice shot, that kinda hurt.",
         "You hit something... great.",
         "That's one less thing to hide. I guess",
-        "Direct hit. Don't get cocky."
+        "Direct hit. Don't get cocky.",
+        "Thats a hit, BITCH!"
     ]
     delany_comments_miss = [
         "Missed... but at least you tried.",
@@ -287,13 +288,15 @@ def battleship():
     ]
     delany_comments_bot_hit = [
         "I hit you! Take that you unswiddling pirate",
-        "Thats a hit, BITCH!",
         "Oof. That looked painful."
+        
     ]
     delany_comments_bot_miss = [
         "I missed. Lucky you.",
-        "HOW DID I MISS YOUR SHIP YOUR YOU LITTLE SHIT",
-        "*SIGH*, I missed."
+        "HOW DID I MISS YOUR SHIP YOU LITTLE SHIT",
+        "*SIGH*, I missed.",
+        "DAMNIT I MISSED",
+        "It's all part of my plan...  I swear"
     ]
 
     # game loop
@@ -308,7 +311,7 @@ def battleship():
         # Player's turn
         valid = False
         while not valid:
-            guess = input('\nEnter a coordinate to fire (e.g. A1): ').strip()
+            guess = input('\nEnter a coordinate to fire (e.g. A1 or a1): ').strip()
             parsed = parse_input(guess)
             if not parsed:
                 print_slow("That's not a valid coordinate. Try like A1 or 1 A.")
