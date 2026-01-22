@@ -55,10 +55,11 @@ Patch notes:
 -Added more dialoge and story
 -Started 'Game' path
 -Moved devlopment to VSCODE
-5.0.2 alpha (released on jan 21 2026)
+5.0.2 alpha (released on jan 22 2026)
 -Updated variable names
 -Fixed naming loophole where you could name yourself Dhyan and/or Delany
--Made Loading bar straight 
+-Made Loading bar straight
+-Implemented Battleship
 Known Issues:
 -Some minor pacing issues persist
 -Misinputs can ruin the game
